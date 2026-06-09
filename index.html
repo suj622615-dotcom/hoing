@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>홍정일 — 화가</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600&family=Noto+Sans+KR:wght@200;300;400;500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #f5f0e8;
+    --dark: #1a1410;
+    --gold: #b8965a;
+    --warm: #8b6f4e;
+    --muted: #6b5d4f;
+    --light-warm: #e8ddd0;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--cream);
+    color: var(--dark);
+    font-family: 'Noto Sans KR', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+  }
+  body.en {
+    font-family: 'Cormorant Garamond', serif;
+  }
+
+  /* ── CURSOR ── */
+  body { cursor: none; }
+  #cursor {
+    width: 10px; height: 10px; border-radius: 50%;
+    background: var(--gold); position: fixed;
+    pointer-events: none; z-index: 9999;
+    transition: transform 0.15s ease;
+    transform: translate(-50%, -50%);
+  }
+  #cursor-ring {
+    width: 36px; height: 36px; border-radius: 50%;
+    border: 1px solid var(--gold); position: fixed;
+    pointer-events: none; z-index: 9998;
+    transform: translate(-50%, -50%);
+    transition: transform 0.35s ease, opacity 0.3s;
+    opacity: 0.5;
+  }
+
+  /* ── LANG TOGGLE ── */
+  .lang-toggle {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    border: 1px solid var(--light-warm);
+    border-radius: 2px;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+  .lang-btn {
+    font-size: 0.68rem;
+    letter-spacing: 0.15em;
+    padding: 6px 12px;
+    background: transparent;
+    border: none;
+    cursor: none;
+    color: var(--muted);
+    font-family: 'Noto Sans KR', sans-serif;
+    transition: background 0.25s, color 0.25s;
+  }
+  .lang-btn.active {
+    background: var(--dark);
+    color: var(--cream);
+  }
+  .lang-btn:hover:not(.active) { color: var(--gold); }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 24px 60px;
+    background: linear-gradient(to bottom, rgba(245,240,232,0.97), transparent);
+  }
+  .nav-logo {
+    font-size: 1.05rem; font-weight: 600;
+    letter-spacing: 0.1em; color: var(--dark);
+    text-decoration: none;
+    font-family: 'Noto Serif KR', serif;
+    transition: font-family 0.1s;
+  }
+  body.en .nav-logo { font-family: 'Cormorant Garamond', serif; letter-spacing: 0.2em; }
+  .nav-right { display: flex; align-items: center; gap: 36px; }
+  .nav-links { display: flex; gap: 32px; list-style: none; }
+  .nav-links a {
+    font-size: 0.8rem; letter-spacing: 0.08em;
+    color: var(--muted); text-decoration: none;
+    transition: color 0.3s;
+  }
+  body.en .nav-links a { font-family: 'Cormorant Garamond', serif; font-size: 0.85rem; letter-spacing: 0.2em; text-transform: uppercase; }
+  .nav-links a:hover { color: var(--gold); }
+
+  /* ── HERO ── */
+  .hero {
+    height: 100vh;
+    display: grid; grid-template-columns: 1fr 1fr;
+    position: relative; overflow: hidden;
+  }
+  .hero-left {
+    display: flex; flex-direction: column;
+    justify-content: flex-end;
+    padding: 0 60px 80px; position: relative; z-index: 2;
+  }
+  .hero-eyebrow {
+    font-size: 0.72rem; letter-spacing: 0.15em;
+    color: var(--gold); margin-bottom: 20px;
+    opacity: 0; animation: fadeUp 1s 0.4s forwards;
+  }
+  body.en .hero-eyebrow { font-family: 'Cormorant Garamond', serif; letter-spacing: 0.3em; text-transform: uppercase; font-size: 0.68rem; }
+  .hero-title {
+    font-family: 'Noto Serif KR', serif;
+    font-size: clamp(3.2rem, 7vw, 6rem);
+    font-weight: 300; line-height: 1.1;
+    color: var(--dark);
+    opacity: 0; animation: fadeUp 1s 0.6s forwards;
+  }
+  body.en .hero-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(3.5rem, 7vw, 6.5rem); line-height: 0.95; }
+  .hero-title em { font-style: normal; color: var(--warm); display: block; }
+  body.en .hero-title em { font-style: italic; }
+  .hero-sub {
+    margin-top: 28px; font-size: 0.87rem;
+    letter-spacing: 0.04em; color: var(--muted);
+    max-width: 320px; line-height: 2;
+    opacity: 0; animation: fadeUp 1s 0.8s forwards;
+  }
+  body.en .hero-sub { font-family: 'Cormorant Garamond', serif; font-size: 1rem; letter-spacing: 0.05em; line-height: 1.8; }
+  .hero-cta {
+    margin-top: 48px; display: flex; align-items: center; gap: 20px;
+    opacity: 0; animation: fadeUp 1s 1s forwards;
+  }
+  .btn-primary {
+    font-size: 0.78rem; letter-spacing: 0.12em;
+    color: var(--cream); background: var(--dark);
+    padding: 14px 32px; text-decoration: none;
+    transition: background 0.3s;
+  }
+  body.en .btn-primary { font-family: 'Cormorant Garamond', serif; letter-spacing: 0.25em; text-transform: uppercase; font-size: 0.72rem; }
+  .btn-primary:hover { background: var(--gold); }
+  .btn-ghost {
+    font-size: 0.78rem; letter-spacing: 0.1em;
+    color: var(--dark); text-decoration: none;
+    border-bottom: 1px solid var(--gold);
+    padding-bottom: 3px; transition: color 0.3s;
+  }
+  body.en .btn-ghost { font-family: 'Cormorant Garamond', serif; letter-spacing: 0.2em; text-transform: uppercase; font-size: 0.72rem; }
+  .btn-ghost:hover { color: var(--gold); }
+
+  .hero-right { position: relative; overflow: hidden; }
+  .hero-image-wrap {
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, #d4c4b0 0%, #c9b89a 40%, #b8a080 100%);
+    display: flex; align-items: center; justify-content: center; overflow: hidden;
+  }
+  .hero-image-wrap::after {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(to right, var(--cream) 0%, transparent 20%);
+    z-index: 1;
+  }
+  .hero-placeholder-art {
+    width: 100%; height: 100%;
+    background:
+      radial-gradient(ellipse at 30% 60%, rgba(184,150,90,0.3) 0%, transparent 50%),
+      radial-gradient(ellipse at 70% 30%, rgba(139,111,78,0.2) 0%, transparent 45%),
+      linear-gradient(160deg, #e8d8c0 0%, #c8b090 50%, #a87850 100%);
+  }
+  .hero-image-wrap svg {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    opacity: 0.15; z-index: 0;
+  }
+  .hero-year {
+    position: absolute; bottom: 40px; right: 40px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 8rem; font-weight: 300;
+    color: rgba(26,20,16,0.06); line-height: 1;
+    z-index: 2; pointer-events: none;
+  }
+
+  /* ── MARQUEE ── */
+  .marquee-bar {
+    background: var(--dark); padding: 14px 0;
+    overflow: hidden; white-space: nowrap;
+  }
+  .marquee-track {
+    display: inline-flex;
+    animation: marquee 26s linear infinite;
+  }
+  .marquee-track span {
+    font-size: 0.72rem; letter-spacing: 0.15em;
+    color: var(--gold); padding: 0 48px;
+  }
+  .marquee-track span.sep { color: rgba(184,150,90,0.3); padding: 0; }
+
+  /* ── ABOUT ── */
+  .about {
+    display: grid; grid-template-columns: 1fr 1.2fr;
+    min-height: 70vh; align-items: stretch;
+  }
+  .about-image {
+    background: linear-gradient(180deg, #d4c0a0 0%, #b89870 100%);
+    position: relative; overflow: hidden; min-height: 500px;
+  }
+  .about-image-inner {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse at 50% 80%, rgba(184,150,90,0.4) 0%, transparent 60%),
+      linear-gradient(180deg, #e0ceb0 0%, #c0a070 100%);
+  }
+  .about-content {
+    padding: 100px 80px 80px 80px;
+    display: flex; flex-direction: column; justify-content: center;
+  }
+  .section-label {
+    font-size: 0.7rem; letter-spacing: 0.25em;
+    color: var(--gold); margin-bottom: 24px;
+  }
+  body.en .section-label { font-family: 'Cormorant Garamond', serif; text-transform: uppercase; letter-spacing: 0.4em; font-size: 0.65rem; }
+  .about-content h2 {
+    font-family: 'Noto Serif KR', serif;
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    font-weight: 300; line-height: 1.4;
+    margin-bottom: 32px; color: var(--dark);
+  }
+  body.en .about-content h2 { font-family: 'Cormorant Garamond', serif; line-height: 1.15; }
+  .about-content h2 em { font-style: normal; color: var(--warm); }
+  body.en .about-content h2 em { font-style: italic; }
+  .about-text {
+    font-size: 0.88rem; line-height: 2.1;
+    color: var(--muted); max-width: 440px; margin-bottom: 20px;
+  }
+  body.en .about-text { font-family: 'Cormorant Garamond', serif; font-size: 1rem; line-height: 1.9; }
+  .about-stats {
+    display: flex; gap: 48px;
+    margin-top: 40px; padding-top: 40px;
+    border-top: 1px solid var(--light-warm);
+  }
+  .stat-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.8rem; font-weight: 300;
+    color: var(--dark); line-height: 1;
+  }
+  .stat-label {
+    font-size: 0.7rem; letter-spacing: 0.1em;
+    color: var(--muted); margin-top: 6px;
+  }
+  body.en .stat-label { font-family: 'Cormorant Garamond', serif; letter-spacing: 0.15em; text-transform: uppercase; font-size: 0.65rem; }
+
+  /* ── GALLERY ── */
+  .gallery { padding: 100px 60px; }
+  .gallery-header {
+    display: flex; justify-content: space-between; align-items: flex-end;
+    margin-bottom: 60px;
+  }
+  .gallery-header h2 {
+    font-family: 'Noto Serif KR', serif;
+    font-size: clamp(2.2rem, 5vw, 3.8rem);
+    font-weight: 300; line-height: 1.3;
+  }
+  body.en .gallery-header h2 { font-family: 'Cormorant Garamond', serif; line-height: 1; }
+  .gallery-header h2 em { font-style: normal; color: var(--warm); }
+  body.en .gallery-header h2 em { font-style: italic; }
+  .gallery-header a {
+    font-size: 0.78rem; letter-spacing: 0.08em;
+    color: var(--muted); text-decoration: none;
+    border-bottom: 1px solid var(--light-warm);
+    padding-bottom: 3px; transition: color 0.3s, border-color 0.3s;
+  }
+  body.en .gallery-header a { font-family: 'Cormorant Garamond', serif; letter-spacing: 0.2em; font-size: 0.82rem; }
+  .gallery-header a:hover { color: var(--gold); border-color: var(--gold); }
+
+  .gallery-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: auto auto; gap: 20px;
+  }
+  .gallery-item { position: relative; overflow: hidden; cursor: none; }
+  .gallery-item:first-child { grid-row: span 2; min-height: 500px; }
+  .gallery-item-img { width: 100%; padding-top: 125%; position: relative; overflow: hidden; }
+  .gallery-item:first-child .gallery-item-img {
+    position: absolute; inset: 0; padding-top: 0;
+  }
+  .img-fill {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%; object-fit: cover;
+    transition: transform 0.7s ease;
+  }
+  .gallery-item:hover .img-fill { transform: scale(1.05); }
+  .p1 { background: linear-gradient(160deg,#e8d4b8 0%,#c8a870 50%,#a07040 100%); }
+  .p2 { background: linear-gradient(145deg,#d4e0c8 0%,#a8c090 50%,#6a9060 100%); }
+  .p3 { background: linear-gradient(155deg,#e0d0e8 0%,#b090c0 50%,#806090 100%); }
+  .p4 { background: linear-gradient(165deg,#e8e0c8 0%,#d0b880 50%,#b09050 100%); }
+  .p5 { background: linear-gradient(150deg,#d8e8e0 0%,#90c0a8 50%,#508070 100%); }
+  .gallery-item-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(26,20,16,0.85) 0%, transparent 50%);
+    opacity: 0; transition: opacity 0.4s;
+    display: flex; flex-direction: column;
+    justify-content: flex-end; padding: 28px; z-index: 2;
+  }
+  .gallery-item:hover .gallery-item-overlay { opacity: 1; }
+  .overlay-title {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 1.1rem; color: var(--cream); font-weight: 300;
+  }
+  body.en .overlay-title { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 1.2rem; }
+  .overlay-meta { font-size: 0.7rem; letter-spacing: 0.12em; color: var(--gold); margin-top: 6px; }
+
+  /* ── WORKSHOPS ── */
+  .workshops {
+    background: var(--dark); padding: 100px 60px;
+    position: relative; overflow: hidden;
+  }
+  .workshops::before {
+    content: attr(data-bg);
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%,-50%);
+    font-family: 'Noto Serif KR', serif;
+    font-size: 16vw; font-weight: 300;
+    color: rgba(255,255,255,0.02);
+    white-space: nowrap; pointer-events: none;
+  }
+  .workshops .section-label { color: var(--gold); }
+  .workshops h2 {
+    font-family: 'Noto Serif KR', serif;
+    font-size: clamp(2.2rem, 5vw, 3.8rem);
+    font-weight: 300; color: var(--cream);
+    margin-bottom: 60px; line-height: 1.4;
+  }
+  body.en .workshops h2 { font-family: 'Cormorant Garamond', serif; line-height: 1.15; }
+  .workshops h2 em { font-style: normal; color: var(--gold); }
+  body.en .workshops h2 em { font-style: italic; }
+  .workshop-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; }
+  .workshop-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(184,150,90,0.15);
+    padding: 44px 36px; transition: background 0.3s, border-color 0.3s;
+  }
+  .workshop-card:hover { background: rgba(184,150,90,0.08); border-color: rgba(184,150,90,0.5); }
+  .workshop-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 3.5rem; font-weight: 300;
+    color: rgba(184,150,90,0.2); line-height: 1; margin-bottom: 20px;
+  }
+  .workshop-title {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 1.3rem; color: var(--cream);
+    margin-bottom: 16px; font-weight: 300;
+  }
+  body.en .workshop-title { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 1.4rem; }
+  .workshop-desc {
+    font-size: 0.82rem; line-height: 2;
+    color: rgba(245,240,232,0.4); margin-bottom: 28px;
+  }
+  body.en .workshop-desc { font-family: 'Cormorant Garamond', serif; font-size: 0.95rem; line-height: 1.9; }
+  .workshop-link {
+    font-size: 0.75rem; letter-spacing: 0.1em;
+    color: var(--gold); text-decoration: none;
+    border-bottom: 1px solid rgba(184,150,90,0.4);
+    padding-bottom: 3px; transition: border-color 0.3s;
+  }
+  .workshop-link:hover { border-color: var(--gold); }
+
+  /* ── CONTACT ── */
+  .contact {
+    padding: 100px 60px;
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 80px; align-items: center;
+  }
+  .contact-left h2 {
+    font-family: 'Noto Serif KR', serif;
+    font-size: clamp(2.2rem, 5vw, 3.8rem);
+    font-weight: 300; line-height: 1.4; margin-bottom: 24px;
+  }
+  body.en .contact-left h2 { font-family: 'Cormorant Garamond', serif; line-height: 1.15; }
+  .contact-left h2 em { font-style: normal; color: var(--warm); }
+  body.en .contact-left h2 em { font-style: italic; }
+  .contact-text {
+    font-size: 0.88rem; line-height: 2.1;
+    color: var(--muted); max-width: 380px; margin-bottom: 36px;
+  }
+  body.en .contact-text { font-family: 'Cormorant Garamond', serif; font-size: 1rem; line-height: 1.9; }
+  .contact-email {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.2rem; color: var(--dark);
+    text-decoration: none; border-bottom: 1px solid var(--gold);
+    padding-bottom: 4px; transition: color 0.3s;
+  }
+  .contact-email:hover { color: var(--gold); }
+  .contact-form { display: flex; flex-direction: column; gap: 20px; }
+  .form-group { display: flex; flex-direction: column; gap: 8px; }
+  .form-label { font-size: 0.72rem; letter-spacing: 0.15em; color: var(--muted); }
+  body.en .form-label { font-family: 'Cormorant Garamond', serif; text-transform: uppercase; letter-spacing: 0.3em; font-size: 0.65rem; }
+  .form-input, .form-textarea {
+    background: transparent; border: none;
+    border-bottom: 1px solid var(--light-warm);
+    padding: 12px 0; font-family: 'Noto Sans KR', sans-serif;
+    font-size: 0.88rem; font-weight: 300;
+    color: var(--dark); outline: none; transition: border-color 0.3s;
+  }
+  body.en .form-input, body.en .form-textarea { font-family: 'Cormorant Garamond', serif; font-size: 1rem; }
+  .form-input:focus, .form-textarea:focus { border-color: var(--gold); }
+  .form-textarea { resize: none; min-height: 100px; }
+  .form-submit {
+    align-self: flex-start; font-size: 0.82rem; letter-spacing: 0.1em;
+    color: var(--cream); background: var(--dark);
+    border: none; padding: 16px 36px; cursor: none;
+    transition: background 0.3s; font-family: 'Noto Sans KR', sans-serif;
+    font-weight: 400; margin-top: 8px;
+  }
+  body.en .form-submit { font-family: 'Cormorant Garamond', serif; text-transform: uppercase; letter-spacing: 0.25em; font-size: 0.75rem; }
+  .form-submit:hover { background: var(--gold); }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--dark); padding: 48px 60px;
+    display: flex; justify-content: space-between; align-items: center;
+    border-top: 1px solid rgba(184,150,90,0.15);
+  }
+  .footer-logo {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 1rem; font-weight: 600; letter-spacing: 0.08em;
+    color: var(--cream); text-decoration: none;
+  }
+  body.en .footer-logo { font-family: 'Cormorant Garamond', serif; letter-spacing: 0.2em; }
+  .footer-links { display: flex; gap: 28px; list-style: none; }
+  .footer-links a {
+    font-size: 0.75rem; letter-spacing: 0.08em;
+    color: rgba(245,240,232,0.35); text-decoration: none; transition: color 0.3s;
+  }
+  .footer-links a:hover { color: var(--gold); }
+  .footer-copy { font-size: 0.7rem; letter-spacing: 0.08em; color: rgba(245,240,232,0.2); }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+  .reveal {
+    opacity: 0; transform: translateY(40px);
+    transition: opacity 0.9s ease, transform 0.9s ease;
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    nav { padding: 16px 20px; }
+    .nav-links { display: none; }
+    .hero { grid-template-columns: 1fr; }
+    .hero-right { display: none; }
+    .hero-left { padding: 100px 24px 60px; height: 100vh; justify-content: flex-end; }
+    .about { grid-template-columns: 1fr; }
+    .about-image { min-height: 280px; }
+    .about-content { padding: 60px 24px; }
+    .gallery { padding: 60px 24px; }
+    .gallery-grid { grid-template-columns: 1fr 1fr; }
+    .gallery-item:first-child { grid-column: span 2; min-height: 320px; }
+    .workshops { padding: 60px 24px; }
+    .workshop-grid { grid-template-columns: 1fr; }
+    .contact { grid-template-columns: 1fr; padding: 60px 24px; gap: 48px; }
+    footer { flex-direction: column; gap: 20px; text-align: center; padding: 36px 24px; }
+    .footer-links { flex-wrap: wrap; justify-content: center; }
+    body { cursor: auto; }
+    #cursor, #cursor-ring { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
+<!-- 네비게이션 -->
+<nav>
+  <a href="#" class="nav-logo" data-ko="홍정일" data-en="Hong Jeong-il">홍정일</a>
+  <div class="nav-right">
+    <ul class="nav-links">
+      <li><a href="#about" data-ko="작가 소개" data-en="Biography">작가 소개</a></li>
+      <li><a href="#gallery" data-ko="작품" data-en="Artwork">작품</a></li>
+      <li><a href="#workshops" data-ko="워크샵" data-en="Workshops">워크샵</a></li>
+      <li><a href="#contact" data-ko="문의" data-en="Contact">문의</a></li>
+      <li><a href="#" data-ko="작품 구매" data-en="Shop">작품 구매</a></li>
+    </ul>
+    <div class="lang-toggle">
+      <button class="lang-btn active" onclick="setLang('ko')">KO</button>
+      <button class="lang-btn" onclick="setLang('en')">EN</button>
+    </div>
+  </div>
+</nav>
+
+<!-- 히어로 -->
+<section class="hero">
+  <div class="hero-left">
+    <img src="images/pinetree.jpg" alt="소나무 그림">
+    <p class="hero-eyebrow" data-ko="공식 포트폴리오 — 화가 홍정일" data-en="Official Portfolio — Artist Hong Jeong-il">공식 포트폴리오 — 화가 홍정일</p>
+    <h1 class="hero-title">
+      <span data-ko="홍" data-en="Hong">홍</span><em data-ko="정일" data-en="Jeong-il">정일</em>
+    </h1>
+    <p class="hero-sub" data-ko="빛과 색채로 담아내는 일상의 아름다움. 인물화와 풍경화를 통해 삶의 따뜻한 순간을 캔버스에 담습니다." data-en="Capturing the beauty of everyday life through light and colour. Oil paintings that hold the warmth of fleeting human moments.">
+      빛과 색채로 담아내는 일상의 아름다움. 인물화와 풍경화를 통해 삶의 따뜻한 순간을 캔버스에 담습니다.
+    </p>
+    <div class="hero-cta">
+      <a href="#gallery" class="btn-primary" data-ko="작품 보기" data-en="View Artwork">작품 보기</a>
+      <a href="#contact" class="btn-ghost" data-ko="작품 의뢰" data-en="Commission">작품 의뢰</a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-image-wrap">
+      <div class="hero-placeholder-art"></div>
+      <svg viewBox="0 0 600 700" preserveAspectRatio="none">
+        <path d="M 100 200 Q 300 100 500 300 Q 400 500 200 600" stroke="rgba(139,111,78,0.6)" stroke-width="1.5" fill="none"/>
+        <path d="M 50 400 Q 250 250 450 450 Q 350 600 150 550" stroke="rgba(184,150,90,0.4)" stroke-width="1" fill="none"/>
+        <circle cx="300" cy="350" r="180" stroke="rgba(139,111,78,0.15)" stroke-width="1" fill="none"/>
+        <circle cx="300" cy="350" r="220" stroke="rgba(139,111,78,0.08)" stroke-width="1" fill="none"/>
+      </svg>
+    </div>
+    <div class="hero-year">2024</div>
+  </div>
+</section>
+
+<!-- 마퀴 -->
+<div class="marquee-bar">
+  <div class="marquee-track" id="marquee-track">
+    <span data-ko="유화" data-en="Oil on Canvas">유화</span><span class="sep">—</span>
+    <span data-ko="인물화" data-en="Figurative Realism">인물화</span><span class="sep">—</span>
+    <span data-ko="초상화 의뢰" data-en="Portrait Commissions">초상화 의뢰</span><span class="sep">—</span>
+    <span data-ko="온라인 워크샵" data-en="Online Workshops">온라인 워크샵</span><span class="sep">—</span>
+    <span data-ko="국내외 전시" data-en="International Exhibitions">국내외 전시</span><span class="sep">—</span>
+    <span data-ko="작품 판매" data-en="Original Artworks for Sale">작품 판매</span><span class="sep">—</span>
+    <span data-ko="유화" data-en="Oil on Canvas">유화</span><span class="sep">—</span>
+    <span data-ko="인물화" data-en="Figurative Realism">인물화</span><span class="sep">—</span>
+    <span data-ko="초상화 의뢰" data-en="Portrait Commissions">초상화 의뢰</span><span class="sep">—</span>
+    <span data-ko="온라인 워크샵" data-en="Online Workshops">온라인 워크샵</span><span class="sep">—</span>
+    <span data-ko="국내외 전시" data-en="International Exhibitions">국내외 전시</span><span class="sep">—</span>
+    <span data-ko="작품 판매" data-en="Original Artworks for Sale">작품 판매</span><span class="sep">—</span>
+  </div>
+</div>
+
+<!-- 작가 소개 -->
+<section class="about" id="about">
+  <div class="about-image"><div class="about-image-inner"></div></div>
+  <div class="about-content reveal">
+    <p class="section-label" data-ko="작가 소개" data-en="Biography">작가 소개</p>
+    <h2>
+      <span data-ko="빛과 색으로" data-en="A Life Devoted">빛과 색으로</span><br>
+      <em data-ko="순간을 담다" data-en="to Light &amp; Beauty">순간을 담다</em>
+    </h2>
+    <p class="about-text" data-ko="홍정일 작가는 오랜 시간 유화를 통해 인물과 자연의 아름다움을 탐구해 왔습니다. 따뜻한 빛과 섬세한 붓 터치로 완성된 작품들은 보는 이에게 잔잔한 감동과 여운을 남깁니다." data-en="Hong Jeong-il has spent decades exploring the beauty of people and nature through oil painting. His works, completed with warm light and delicate brushwork, leave a quiet resonance with every viewer.">
+      홍정일 작가는 오랜 시간 유화를 통해 인물과 자연의 아름다움을 탐구해 왔습니다. 따뜻한 빛과 섬세한 붓 터치로 완성된 작품들은 보는 이에게 잔잔한 감동과 여운을 남깁니다.
+    </p>
+    <p class="about-text" data-ko="일상의 소소한 순간들을 특별하게 포착하는 작가의 시선은, 캔버스 위에서 시간을 초월한 아름다움으로 피어납니다." data-en="His gaze finds the extraordinary within the ordinary — and on canvas, those fleeting instants bloom into timeless beauty.">
+      일상의 소소한 순간들을 특별하게 포착하는 작가의 시선은, 캔버스 위에서 시간을 초월한 아름다움으로 피어납니다.
+    </p>
+    <div class="about-stats">
+      <div>
+        <div class="stat-num">20+</div>
+        <div class="stat-label" data-ko="작품 활동 연수" data-en="Years of Art">작품 활동 연수</div>
+      </div>
+      <div>
+        <div class="stat-num">300+</div>
+        <div class="stat-label" data-ko="작품 수" data-en="Paintings">작품 수</div>
+      </div>
+      <div>
+        <div class="stat-num">15+</div>
+        <div class="stat-label" data-ko="전시 횟수" data-en="Exhibitions">전시 횟수</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 갤러리 -->
+<section class="gallery" id="gallery">
+  <div class="gallery-header reveal">
+    <h2><span data-ko="대표" data-en="Selected">대표</span><br><em data-ko="작품" data-en="Works">작품</em></h2>
+    <a href="#" data-ko="전체 작품 보기 →" data-en="View All Artwork →">전체 작품 보기 →</a>
+  </div>
+  <div class="gallery-grid">
+    <div class="gallery-item">
+      <div class="gallery-item-img"><img class="img-fill" src="images/landscape_4.jpg" alt="아침의 빛" loading="lazy"></div>
+      <div class="gallery-item-overlay">
+        <div class="overlay-title" data-ko="아침의 빛" data-en="Morning Light">아침의 빛</div>
+        <div class="overlay-meta" data-ko="유화 · 2023" data-en="Oil on Canvas · 2023">유화 · 2023</div>
+      </div>
+    </div>
+    <div class="gallery-item">
+      <div class="gallery-item-img"><img class="img-fill" src="images/landscape.jpg" alt="봄 정원" loading="lazy"></div>
+      <div class="gallery-item-overlay">
+        <div class="overlay-title" data-ko="봄 정원" data-en="Spring Garden">봄 정원</div>
+        <div class="overlay-meta" data-ko="유화 · 2023" data-en="Oil on Canvas · 2023">유화 · 2023</div>
+      </div>
+    </div>
+    <div class="gallery-item">
+      <div class="gallery-item-img"><img class="img-fill" src="images/landscape_3.jpg" alt="고요한 오후" loading="lazy"></div>
+      <div class="gallery-item-overlay">
+        <div class="overlay-title" data-ko="고요한 오후" data-en="Quiet Afternoon">고요한 오후</div>
+        <div class="overlay-meta" data-ko="유화 · 2022" data-en="Oil on Canvas · 2022">유화 · 2022</div>
+      </div>
+    </div>
+    <div class="gallery-item">
+      <div class="gallery-item-img"><img class="img-fill" src="images/landscape_2.jpg" alt="여름의 우아함" loading="lazy"></div>
+      <div class="gallery-item-overlay">
+        <div class="overlay-title" data-ko="여름의 우아함" data-en="Summer Grace">여름의 우아함</div>
+        <div class="overlay-meta" data-ko="유화 · 2022" data-en="Oil on Canvas · 2022">유화 · 2022</div>
+      </div>
+    </div>
+    <div class="gallery-item">
+      <div class="gallery-item-img"><img class="img-fill" src="images/face.jpg" alt="따스한 오후" loading="lazy"></div>
+      <div class="gallery-item-overlay">
+        <div class="overlay-title" data-ko="따스한 오후" data-en="Tender Afternoon">따스한 오후</div>
+        <div class="overlay-meta" data-ko="유화 · 2021" data-en="Oil on Canvas · 2021">유화 · 2021</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 워크샵 -->
+<section class="workshops" id="workshops" data-bg="워크샵">
+  <p class="section-label" data-ko="미술 교육" data-en="Education">미술 교육</p>
+  <h2>
+    <span data-ko="홍정일 작가와 함께" data-en="Learn to Paint">홍정일 작가와 함께</span><br>
+    <em data-ko="그림을 배우다" data-en="with Hong Jeong-il">그림을 배우다</em>
+  </h2>
+  <div class="workshop-grid">
+    <div class="workshop-card reveal">
+      <div class="workshop-num">01</div>
+      <div class="workshop-title" data-ko="인물화 기초" data-en="Portrait Fundamentals">인물화 기초</div>
+      <p class="workshop-desc" data-ko="얼굴의 구조와 빛의 표현, 피부 색감을 유화로 완성하는 과정을 처음부터 단계별로 배웁니다." data-en="Master facial structure, light modeling, and skin tones in oil — step by step from first lay-in to final glaze.">얼굴의 구조와 빛의 표현, 피부 색감을 유화로 완성하는 과정을 처음부터 단계별로 배웁니다.</p>
+      <a href="#" class="workshop-link" data-ko="자세히 보기 →" data-en="Learn More →">자세히 보기 →</a>
+    </div>
+    <div class="workshop-card reveal" style="transition-delay:0.1s">
+      <div class="workshop-num">02</div>
+      <div class="workshop-title" data-ko="인체와 구도" data-en="Figure &amp; Composition">인체와 구도</div>
+      <p class="workshop-desc" data-ko="야외 배경 속 인물의 표현 언어를 탐구합니다. 빛, 그림자, 분위기, 그리고 이야기를 담는 법." data-en="Explore the expressive language of the figure in outdoor settings — light, shadow, atmosphere, and storytelling.">야외 배경 속 인물의 표현 언어를 탐구합니다. 빛, 그림자, 분위기, 그리고 이야기를 담는 법.</p>
+      <a href="#" class="workshop-link" data-ko="자세히 보기 →" data-en="Learn More →">자세히 보기 →</a>
+    </div>
+    <div class="workshop-card reveal" style="transition-delay:0.2s">
+      <div class="workshop-num">03</div>
+      <div class="workshop-title" data-ko="온라인 아카데미" data-en="Online Academy">온라인 아카데미</div>
+      <p class="workshop-desc" data-ko="전 세계 어디서나 수강 가능한 영상 강의. 작가의 화법을 배우는 수강생들과 함께 성장하세요." data-en="Self-paced video lessons available worldwide. Join students learning the artist's signature approach.">전 세계 어디서나 수강 가능한 영상 강의. 작가의 화법을 배우는 수강생들과 함께 성장하세요.</p>
+      <a href="#" class="workshop-link" data-ko="아카데미 참여 →" data-en="Join Academy →">아카데미 참여 →</a>
+    </div>
+  </div>
+</section>
+
+<!-- 문의 -->
+<section class="contact" id="contact">
+  <div class="contact-left reveal">
+    <p class="section-label" data-ko="문의하기" data-en="Get in Touch">문의하기</p>
+    <h2>
+      <span data-ko="초상화" data-en="Commission a">초상화</span><br>
+      <em data-ko="의뢰하기" data-en="Portrait">의뢰하기</em>
+    </h2>
+    <p class="contact-text" data-ko="모든 의뢰는 작가와의 깊은 대화에서 시작됩니다. 소중한 사람과의 순간을 캔버스에 영원히 담아 드립니다." data-en="Every commission begins with a deep conversation. Together we capture the people and moments most precious to you — preserved on canvas, forever.">
+      모든 의뢰는 작가와의 깊은 대화에서 시작됩니다. 소중한 사람과의 순간을 캔버스에 영원히 담아 드립니다.
+    </p>
+    <a href="mailto:art@hongjungil.com" class="contact-email">art@hongjungil.com</a>
+  </div>
+  <div class="contact-form reveal" style="transition-delay:0.15s">
+    <div class="form-group">
+      <label class="form-label" data-ko="성함" data-en="Your Name">성함</label>
+      <input class="form-input" type="text" data-placeholder-ko="홍길동" data-placeholder-en="Full Name" placeholder="홍길동">
+    </div>
+    <div class="form-group">
+      <label class="form-label" data-ko="이메일" data-en="Email Address">이메일</label>
+      <input class="form-input" type="email" data-placeholder-ko="example@email.com" data-placeholder-en="your@email.com" placeholder="example@email.com">
+    </div>
+    <div class="form-group">
+      <label class="form-label" data-ko="문의 내용" data-en="Message">문의 내용</label>
+      <textarea class="form-textarea" data-placeholder-ko="작품 의뢰 또는 문의 내용을 적어주세요…" data-placeholder-en="Tell me about your project…" placeholder="작품 의뢰 또는 문의 내용을 적어주세요…"></textarea>
+    </div>
+    <button class="form-submit" data-ko="보내기" data-en="Send Message">보내기</button>
+  </div>
+</section>
+
+<!-- 푸터 -->
+<footer>
+  <a href="#" class="footer-logo" data-ko="홍정일" data-en="Hong Jeong-il">홍정일</a>
+  <ul class="footer-links">
+    <li><a href="#" data-ko="인스타그램" data-en="Instagram">인스타그램</a></li>
+    <li><a href="#" data-ko="페이스북" data-en="Facebook">페이스북</a></li>
+    <li><a href="#" data-ko="유튜브" data-en="YouTube">유튜브</a></li>
+    <li><a href="#" data-ko="블로그" data-en="Blog">블로그</a></li>
+    <li><a href="#" data-ko="작품 구매" data-en="Shop">작품 구매</a></li>
+  </ul>
+  <p class="footer-copy" data-ko="© 2024 홍정일 · All rights reserved" data-en="© 2024 Hong Jeong-il · All rights reserved">© 2024 홍정일 · All rights reserved</p>
+</footer>
+
+<script>
+  // ── 언어 전환 ──
+  function setLang(lang) {
+    const body = document.body;
+    const isEn = lang === 'en';
+
+    // body class
+    body.classList.toggle('en', isEn);
+
+    // lang 버튼 active
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.textContent.toLowerCase().includes(lang));
+    });
+
+    // data-ko / data-en 텍스트 전환
+    document.querySelectorAll('[data-ko]').forEach(el => {
+      const text = isEn ? el.dataset.en : el.dataset.ko;
+      if (text !== undefined) el.innerHTML = text;
+    });
+
+    // placeholder 전환
+    document.querySelectorAll('[data-placeholder-ko]').forEach(el => {
+      el.placeholder = isEn ? el.dataset.placeholderEn : el.dataset.placeholderKo;
+    });
+
+    // workshops 배경 텍스트
+    const ws = document.querySelector('.workshops');
+    if (ws) ws.setAttribute('data-bg', isEn ? 'WORKSHOPS' : '워크샵');
+
+    // html lang
+    document.documentElement.lang = isEn ? 'en' : 'ko';
+  }
+
+  // ── 커스텀 커서 ──
+  const cursor = document.getElementById('cursor');
+  const ring   = document.getElementById('cursor-ring');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    cursor.style.left = mx + 'px';
+    cursor.style.top  = my + 'px';
+  });
+  function animateRing() {
+    rx += (mx - rx) * 0.12;
+    ry += (my - ry) * 0.12;
+    ring.style.left = rx + 'px';
+    ring.style.top  = ry + 'px';
+    requestAnimationFrame(animateRing);
+  }
+  animateRing();
+  document.querySelectorAll('a, button').forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      cursor.style.transform = 'translate(-50%,-50%) scale(2.5)';
+      ring.style.opacity = '0.2';
+    });
+    el.addEventListener('mouseleave', () => {
+      cursor.style.transform = 'translate(-50%,-50%) scale(1)';
+      ring.style.opacity = '0.5';
+    });
+  });
+
+  // ── 스크롤 리빌 ──
+  const reveals  = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }
+    });
+  }, { threshold: 0.12 });
+  reveals.forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
