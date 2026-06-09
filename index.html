@@ -281,16 +281,21 @@
   }
   .gallery-item { position: relative; overflow: hidden; cursor: none; }
   .gallery-item:first-child { grid-row: span 2; min-height: 500px; }
-  .gallery-item-img { width: 100%; padding-top: 125%; position: relative; overflow: hidden; }
+  .gallery-item-img {
+    width: 100%; padding-top: 125%; position: relative; overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--light-warm);
+  }
   .gallery-item:first-child .gallery-item-img {
     position: absolute; inset: 0; padding-top: 0;
+    display: flex; align-items: center; justify-content: center;
   }
   .img-fill {
     position: absolute; inset: 0;
-    width: 100%; height: 100%; object-fit: cover;
-    transition: transform 0.7s ease;
+    width: 100%; height: 100%; object-fit: contain; object-position: center;
+    transition: transform 0.45s ease;
   }
-  .gallery-item:hover .img-fill { transform: scale(1.05); }
+  .gallery-item:hover .img-fill { transform: scale(1.02); }
   .p1 { background: linear-gradient(160deg,#e8d4b8 0%,#c8a870 50%,#a07040 100%); }
   .p2 { background: linear-gradient(145deg,#d4e0c8 0%,#a8c090 50%,#6a9060 100%); }
   .p3 { background: linear-gradient(155deg,#e0d0e8 0%,#b090c0 50%,#806090 100%); }
